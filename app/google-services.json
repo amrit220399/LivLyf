@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "645245699983",
+    "firebase_url": "https://livlyf.firebaseio.com",
+    "project_id": "livlyf",
+    "storage_bucket": "livlyf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645245699983:android:f84893e4f44ad84ac26dfa",
+        "android_client_info": {
+          "package_name": "com.apsinnovations.livlyf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645245699983-hrr6a0kbqk4njr4etsj2e0t2ip0toeas.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArZpfadCWRSUBM8M9J8AHQQTgyWLLEtiY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645245699983-hrr6a0kbqk4njr4etsj2e0t2ip0toeas.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

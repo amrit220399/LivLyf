@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">LivLyf</string>
+    <string name="grown_by">Grown by</string>
+    <string name="aps_innovations">APS Innovations</string>
+    <string name="create_profile">Create Profile</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="signup">SignUp</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="login">Login</string>
+</resources>
