@@ -255,6 +255,7 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "onFailure: ", e.getCause());
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
@@ -292,6 +293,7 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(SignupActivity.this, "Profile Image Upload Error. Try Again...", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }

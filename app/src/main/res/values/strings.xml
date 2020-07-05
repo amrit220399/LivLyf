@@ -17,8 +17,15 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
     <string name="not_registered_yet">Not Registered Yet ?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="plants">Plants</string>
+    <string name="pots">Pots</string>
+    <string name="seeds">Seeds</string>
+    <string name="pebbles">Pebbles</string>
+    <string name="home">Home</string>
+    <string name="shop_by_category">Shop By Category</string>
+    <string name="myprofile">MyProfile</string>
+    <string name="logout">Logout</string>
 </resources>
