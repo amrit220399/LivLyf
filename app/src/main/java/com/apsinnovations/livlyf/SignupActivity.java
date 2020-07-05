@@ -1,10 +1,5 @@
 package com.apsinnovations.livlyf;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,15 +10,20 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.apsinnovations.livlyf.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,12 +37,13 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 
 public class SignupActivity extends AppCompatActivity {
     ImageView imgDP;
-    TextInputEditText txtName,txtEmail,txtPass;
-    MaterialButton btnSignup;
+    TextInputEditText txtName,txtEmail, txtPass;
+    Button btnSignup;
     TextView txtLogin;
     ProgressBar progressBar;
     StorageReference storageReference;
@@ -56,6 +57,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_signup);
         imgDP=findViewById(R.id.SA_imgDP);
         txtName=findViewById(R.id.SA_txtName);
@@ -65,6 +67,7 @@ public class SignupActivity extends AppCompatActivity {
         progressBar=findViewById(R.id.SA_progress);
         txtLogin=findViewById(R.id.SA_txtLogin);
         progressBar.setVisibility(View.GONE);
+        user = new User();
 
         storageReference= FirebaseStorage.getInstance().getReference();
 
@@ -239,14 +242,13 @@ public class SignupActivity extends AppCompatActivity {
     private void UploadtoStorage(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        final StorageReference saveRef = storageReference.child("usersDP").child(firebaseUser.getUid() + ".jpeg");
 
-        storageReference.child("usersDP").child(firebaseUser.getUid() + ".jpeg");
-
-        storageReference.putBytes(baos.toByteArray())
+        saveRef.putBytes(baos.toByteArray())
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        getDownloadUrl(storageReference);
+                        getDownloadUrl(saveRef);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
