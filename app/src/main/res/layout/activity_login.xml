@@ -54,6 +54,7 @@
                     android:layout_marginTop="15dp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/LA_txtEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/enter_email"
@@ -72,6 +73,7 @@
                     app:hintAnimationEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/LA_txtPass"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/enter_password"
@@ -89,6 +91,7 @@
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/LA_btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login"
