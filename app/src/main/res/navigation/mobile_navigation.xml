@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.apsinnovations.livlyf.ui.home.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/nav_shopByCategory"
+        android:name="com.apsinnovations.livlyf.ui.shopbycategory.ShopByCategoryFragment"
+        android:label="@string/shop_by_category"
+        tools:layout="@layout/fragment_shop_by_category" />
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.apsinnovations.livlyf.ui.profile.ProfileFragment"
+        android:label="@string/myprofile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/nav_orders"
+        android:name="com.apsinnovations.livlyf.ui.orders.OrdersFragment"
+        android:label="@string/my_orders"
+        tools:layout="@layout/fragment_orders" />
+    <fragment
+        android:id="@+id/nav_wishlist"
+        android:name="com.apsinnovations.livlyf.ui.wishlist.WishlistFragment"
+        android:label="@string/wishlist"
+        tools:layout="@layout/fragment_wishlist" />
+    <fragment
+        android:id="@+id/nav_wallet"
+        android:name="com.apsinnovations.livlyf.ui.wallet.WalletFragment"
+        android:label="@string/wallet"
+        tools:layout="@layout/fragment_wallet" />
+    <fragment
+        android:id="@+id/nav_support"
+        android:name="com.apsinnovations.livlyf.ui.support.SupportFragment"
+        android:label="@string/support"
+        tools:layout="@layout/fragment_support" />
+</navigation>
