@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.apsinnovations.livlyf.models.User;
+import com.apsinnovations.livlyf.utils.PrefManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -58,14 +59,16 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
+        PrefManager prefManager = new PrefManager(getApplicationContext());
+        prefManager.setFirstTimeLaunch(false);
         setContentView(R.layout.activity_signup);
-        imgDP=findViewById(R.id.SA_imgDP);
-        txtName=findViewById(R.id.SA_txtName);
-        txtEmail=findViewById(R.id.SA_txtEmail);
-        txtPass=findViewById(R.id.SA_txtPass);
-        btnSignup=findViewById(R.id.SA_btnSignup);
-        progressBar=findViewById(R.id.SA_progress);
-        txtLogin=findViewById(R.id.SA_txtLogin);
+        imgDP = findViewById(R.id.SA_imgDP);
+        txtName = findViewById(R.id.SA_txtName);
+        txtEmail = findViewById(R.id.SA_txtEmail);
+        txtPass = findViewById(R.id.SA_txtPass);
+        btnSignup = findViewById(R.id.SA_btnSignup);
+        progressBar = findViewById(R.id.SA_progress);
+        txtLogin = findViewById(R.id.SA_txtLogin);
         progressBar.setVisibility(View.GONE);
         user = new User();
 

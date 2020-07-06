@@ -28,4 +28,15 @@
     <string name="shop_by_category">Shop By Category</string>
     <string name="myprofile">MyProfile</string>
     <string name="logout">Logout</string>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="my_orders">My Orders</string>
+    <string name="tools">Tools</string>
+    <string name="decor">Decor</string>
+    <string name="mycart">myCart</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="wallet">Wallet</string>
+    <string name="support">Support</string>
 </resources>

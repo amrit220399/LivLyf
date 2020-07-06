@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
     TextInputEditText txtEmail, txtPass;
     Button btnLogin;
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Objects.requireNonNull(getSupportActionBar()).hide();
         txtEmail = findViewById(R.id.LA_txtEmail);
         txtPass = findViewById(R.id.LA_txtPass);
         btnLogin = findViewById(R.id.LA_btnLogin);
