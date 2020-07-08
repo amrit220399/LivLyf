@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:padding="16dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardHomeCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/colorTransGreen"
@@ -14,6 +16,7 @@
         app:contentPadding="20dp">
 
         <ImageView
+            android:id="@+id/imgHomeCategory"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="centerInside"
@@ -22,6 +25,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
+        android:id="@+id/txtHomeCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

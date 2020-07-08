@@ -1,6 +1,7 @@
 package com.apsinnovations.livlyf.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.apsinnovations.livlyf.ProductsActivity;
 import com.apsinnovations.livlyf.R;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,7 +42,10 @@ public class PlantCategoriesAdapter extends RecyclerView.Adapter<PlantCategories
     @Override
     public void onBindViewHolder(@NonNull PlantCategoriesAdapter.MyPlantsCategoriesHolder holder, int position) {
 //        Categories mycategory=(Categories) categories.get(position);
-
+        Glide.with(holder.itemView)
+                .load(categories.get(position).get("url"))
+                .fitCenter()
+                .into(holder.imgPlants);
         Picasso.get().load(categories.get(position).get("url")).fit().into(holder.imgPlants);
         holder.txtName.setText(categories.get(position).get("name"));
     }
@@ -50,12 +56,24 @@ public class PlantCategoriesAdapter extends RecyclerView.Adapter<PlantCategories
         return categories.size();
     }
 
-    static class MyPlantsCategoriesHolder extends RecyclerView.ViewHolder {
+    class MyPlantsCategoriesHolder extends RecyclerView.ViewHolder {
         ImageView imgPlants;
         TextView txtName;
+        View itemView;
 
         public MyPlantsCategoriesHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ProductsActivity.class);
+                    intent.putExtra("name", "plants");
+                    intent.putExtra("category", categories.get(getLayoutPosition()).get("name"));
+                    context.startActivity(intent);
+                }
+            });
+
             imgPlants = itemView.findViewById(R.id.CPC_imgPlants);
             txtName = itemView.findViewById(R.id.CPC_txtName);
         }

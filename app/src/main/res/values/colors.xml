@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00DAA9</color>
+    <color name="colorPrimary">#0FB892</color>
+    <!--    #00DAA9-->
     <color name="colorPrimaryDark">#0FB892</color>
     <color name="colorAccent">#059FE3</color>
     <color name="colorWhite">#ffffff</color>
@@ -16,4 +17,10 @@
     <color name="dot_light_screen2">#8cf9eb</color>
 
     <color name="colorTransGreen">#8D0FB892</color>
+    <color name="colorTransYellow">#B7FFFF8D</color>
+    <color name="colorTransBlue">#CE80D8FF</color>
+    <color name="colorTransOrange">#BAFF8939</color>
+    <color name="colorTransPurple">#92B388FF</color>
+    <color name="colorTransPink">#B2FF80AB</color>
+
 </resources>

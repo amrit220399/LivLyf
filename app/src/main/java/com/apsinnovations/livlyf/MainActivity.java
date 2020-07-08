@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.apsinnovations.livlyf.utils.CartPrefMananger;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,6 +27,10 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    int items;
+    boolean isFirstTymResume = true;
+    Menu menu;
+    private CartPrefMananger cartPrefMananger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +38,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        cartPrefMananger = new CartPrefMananger(this);
+        items = cartPrefMananger.getItemsCount();
         Drawable drawable = getDrawable(R.drawable.livlogo);
         drawable.setTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
         toolbar.setLogo(drawable);
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        this.menu = menu;
+        if (items > 0) {
+            MenuItem item = menu.findItem(R.id.opt_cart);
+            item.setActionView(R.layout.cart_notification_badge);
+            View view = item.getActionView();
+            TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
+            tv.setText(String.valueOf(items));
+        }
         return true;
     }
 
@@ -92,4 +107,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void updateCart() {
+        items = cartPrefMananger.getItemsCount();
+        MenuItem item = menu.findItem(R.id.opt_cart);
+        item.setActionView(R.layout.cart_notification_badge);
+        View view = item.getActionView();
+        TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
+        tv.setText(String.valueOf(items));
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isFirstTymResume)
+            updateCart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isFirstTymResume = false;
+    }
 }
