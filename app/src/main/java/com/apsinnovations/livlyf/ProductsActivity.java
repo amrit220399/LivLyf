@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apsinnovations.livlyf.adapters.ProductsAdapter;
 import com.apsinnovations.livlyf.models.Products;
-import com.apsinnovations.livlyf.utils.CartPrefMananger;
 import com.apsinnovations.livlyf.utils.MyCartListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,7 +33,6 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
     RecyclerView recyclerView;
     ProductsAdapter productsAdapter;
     ArrayList<Products> products;
-    CartPrefMananger cartPrefMananger;
     int items;
     Menu menu;
 
@@ -44,8 +43,6 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         getSupportActionBar().setElevation(0);
         recyclerView = findViewById(R.id.recyclerProducts);
         products = new ArrayList<>();
-        cartPrefMananger = new CartPrefMananger(this);
-        items = cartPrefMananger.getItemsCount();
         setAdapter();
         new MyAsyncTask().execute("");
 //        fetchProducts();
@@ -73,6 +70,25 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         });
     }
 
+    private void getMyCartCount(){
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                .collection("myCart")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Log.i(TAG, "onSuccess: Cart SIZE"+queryDocumentSnapshots.size());
+                items=queryDocumentSnapshots.size();
+                updateCart();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: "+e.getMessage());
+            }
+        });
+    }
     void addProduct(Products products) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("plants")
@@ -122,19 +138,19 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         getMenuInflater().inflate(R.menu.main, menu);
 
         this.menu = menu;
-        if (items > 0) {
-            final MenuItem item = menu.findItem(R.id.opt_cart);
-            item.setActionView(R.layout.cart_notification_badge);
-            View view = item.getActionView();
-            TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
-            tv.setText(String.valueOf(items));
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onOptionsItemSelected(item);
-                }
-            });
-        }
+//        if (items > 0) {
+//            final MenuItem item = menu.findItem(R.id.opt_cart);
+//            item.setActionView(R.layout.cart_notification_badge);
+//            View view = item.getActionView();
+//            TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
+//            tv.setText(String.valueOf(items));
+//            view.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    onOptionsItemSelected(item);
+//                }
+//            });
+//        }
 
 //        MenuItemCompat.setActionView(item, R.layout.cart_notification_badge);
 //        RelativeLayout notifCount = (RelativeLayout)   MenuItemCompat.getActionView(item);
@@ -160,6 +176,7 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         @Override
         protected Object doInBackground(Object[] objects) {
             fetchProducts();
+            getMyCartCount();
 //            products.add(new Products("Portulaca, 9 O Clock (Any Color)",
 //                    "Flowering Plants",
 //                    "",

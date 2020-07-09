@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.andanhm.quantitypicker.QuantityPicker;
 import com.apsinnovations.livlyf.R;
 import com.apsinnovations.livlyf.models.Products;
-import com.apsinnovations.livlyf.utils.CartPrefMananger;
 import com.apsinnovations.livlyf.utils.MyCartListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +33,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
     int resource;
     ArrayList<Products> products;
     MyCartListener myCartListener;
-    CartPrefMananger cartPrefMananger;
     ArrayList<Products> addedProducts;
     private static final String TAG = "ProductsAdapter";
 
@@ -47,7 +45,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
         } catch (ClassCastException e) {
             Log.i("Exception Caught", "" + e.getMessage());
         }
-        cartPrefMananger = new CartPrefMananger(context);
         addedProducts=new ArrayList<>();
         getMyCartFromFirebase();
     }
@@ -109,7 +106,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
                         addToCart.setText("Added");
                         addToCart.setClickable(false);
                         myCartListener.setItems(quantityPicker.getQuantity());
-                        cartPrefMananger.setItemsCount(quantityPicker.getQuantity());
                         Products myProduct = products.get(getLayoutPosition());
                         myProduct.setQty(quantityPicker.getQuantity());
 

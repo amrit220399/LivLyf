@@ -3,7 +3,9 @@ package com.apsinnovations.livlyf;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,11 +20,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.apsinnovations.livlyf.utils.CartPrefMananger;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     int items;
     boolean isFirstTymResume = true;
     Menu menu;
-    private CartPrefMananger cartPrefMananger;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +43,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        cartPrefMananger = new CartPrefMananger(this);
-        items = cartPrefMananger.getItemsCount();
         Drawable drawable = getDrawable(R.drawable.livlogo);
         drawable.setTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
         toolbar.setLogo(drawable);
+        new MyAsyncTask().execute("");
 //        FloatingActionButton fab = findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -71,20 +75,6 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         this.menu = menu;
-
-        if (items > 0) {
-            final MenuItem item = menu.findItem(R.id.opt_cart);
-            item.setActionView(R.layout.cart_notification_badge);
-            View view = item.getActionView();
-            TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
-            tv.setText(String.valueOf(items));
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onOptionsItemSelected(item);
-                }
-            });
-        }
 
         return true;
     }
@@ -118,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void updateCart() {
-        items = cartPrefMananger.getItemsCount();
         if(items>0) {
             final MenuItem item = menu.findItem(R.id.opt_cart);
             item.setActionView(R.layout.cart_notification_badge);
@@ -138,12 +127,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (!isFirstTymResume)
-            updateCart();
+          new MyAsyncTask().execute("");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         isFirstTymResume = false;
+    }
+
+    private void getMyCartCount(){
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                .collection("myCart")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Log.i(TAG, "onSuccess: Cart SIZE"+queryDocumentSnapshots.size());
+                items=queryDocumentSnapshots.size();
+                updateCart();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: "+e.getMessage());
+            }
+        });
+    }
+
+    class MyAsyncTask extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            getMyCartCount();
+            return null;
+        }
     }
 }

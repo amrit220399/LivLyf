@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.apsinnovations.livlyf.adapters.MyCartAdapter;
 import com.apsinnovations.livlyf.models.Products;
-import com.apsinnovations.livlyf.utils.CartPrefMananger;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,20 +19,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyCartActivity extends AppCompatActivity {
     RecyclerView recyclerCart;
     MyCartAdapter myCartAdapter;
     ArrayList<Products> products;
-    CartPrefMananger cartPrefMananger;
+
     private static final String TAG = "MyCartActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
         getSupportActionBar().setElevation(0);
-        cartPrefMananger=new CartPrefMananger(this);
+
 //        products=cartPrefMananger.getCartItems();
         recyclerCart=findViewById(R.id.recyclerCart);
         products=new ArrayList<>();
