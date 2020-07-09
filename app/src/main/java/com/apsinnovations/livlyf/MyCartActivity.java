@@ -1,13 +1,15 @@
 package com.apsinnovations.livlyf;
 
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
 
 import com.apsinnovations.livlyf.adapters.MyCartAdapter;
 import com.apsinnovations.livlyf.models.Products;
@@ -24,8 +26,13 @@ public class MyCartActivity extends AppCompatActivity {
     RecyclerView recyclerCart;
     MyCartAdapter myCartAdapter;
     ArrayList<Products> products;
-
+    TextView txtAmount, txtTaxes, txtShipping;
+    Button btnPay;
+    double amount = 0, shipping = 0;
+    float taxes = 0;
     private static final String TAG = "MyCartActivity";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +41,13 @@ public class MyCartActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("MyCart");
 
 //        products=cartPrefMananger.getCartItems();
-        recyclerCart=findViewById(R.id.recyclerCart);
-        products=new ArrayList<>();
+        recyclerCart = findViewById(R.id.recyclerCart);
+        txtAmount = findViewById(R.id.txtTaxAmount);
+        txtShipping = findViewById(R.id.txtTotalShipping);
+        txtTaxes = findViewById(R.id.Taxes);
+        btnPay = findViewById(R.id.btnPay);
+
+        products = new ArrayList<>();
         setMyCartAdapter();
 
         new MyAsyncTask().execute("");
@@ -48,10 +60,22 @@ public class MyCartActivity extends AppCompatActivity {
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(DocumentSnapshot snapshot:queryDocumentSnapshots.getDocuments()){
-                    products.add(snapshot.toObject(Products.class));
+                for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
+                    Products myProduct = snapshot.toObject(Products.class);
+                    assert myProduct != null;
+                    amount += myProduct.getPrice() * myProduct.getQty();
+                    shipping += myProduct.getShipping();
+                    products.add(myProduct);
                 }
                 myCartAdapter.notifyDataSetChanged();
+                txtAmount.setText("\u20B9".concat(String.valueOf(amount)));
+                txtShipping.setText("\u20B9".concat(String.valueOf(shipping)));
+                double total = amount + shipping;
+                taxes = (float) (0.05 * total);
+                total += taxes;
+                txtTaxes.setText("\u20B9".concat(String.valueOf(taxes)));
+                btnPay.setText("Pay ".concat("\u20B9").concat(String.valueOf(total)));
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -62,7 +86,7 @@ public class MyCartActivity extends AppCompatActivity {
     }
 
     void setMyCartAdapter(){
-        myCartAdapter =new MyCartAdapter(this,R.layout.cart_mycart,products);
+        myCartAdapter = new MyCartAdapter(this, R.layout.card_mycart, products, txtAmount, txtShipping, txtTaxes, btnPay);
         recyclerCart.setLayoutManager(new LinearLayoutManager(this));
         recyclerCart.setHasFixedSize(true);
         recyclerCart.setAdapter(myCartAdapter);

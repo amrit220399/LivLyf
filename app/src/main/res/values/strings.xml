@@ -44,4 +44,7 @@
     <string name="qty">Qty:</string>
     <string name="livlyf_assured">LivLyf Assured</string>
     <string name="name">Name</string>
+    <string name="added">Added</string>
+    <string name="shipping_charges">Shipping Charges</string>
+    <string name="shipping">Shipping:</string>
 </resources>

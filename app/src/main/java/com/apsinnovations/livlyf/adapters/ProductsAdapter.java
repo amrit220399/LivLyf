@@ -1,6 +1,5 @@
 package com.apsinnovations.livlyf.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
 import android.util.Log;
@@ -36,6 +35,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
     ArrayList<Products> products;
     MyCartListener myCartListener;
     ArrayList<Products> addedProducts;
+    ArrayList<Products> wishListProducts;
     private static final String TAG = "ProductsAdapter";
 
     public ProductsAdapter(Context context, int resource, ArrayList<Products> products) {
@@ -47,8 +47,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
         } catch (ClassCastException e) {
             Log.i("Exception Caught", "" + e.getMessage());
         }
-        addedProducts=new ArrayList<>();
+        addedProducts = new ArrayList<>();
+        wishListProducts = new ArrayList<>();
         getMyCartFromFirebase();
+        getMyWishListItems();
     }
 
     @NonNull
@@ -69,12 +71,21 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
         holder.quantityPicker.setMaxQuantity(products.get(position).getQty());
         holder.quantityPicker.setMinQuantity(1);
 
-        for(Products myProduct:addedProducts){
-            if(myProduct.getID()!=null){
-            if(myProduct.getID().equals(products.get(position).getID())){
-                holder.addToCart.setText("Added");
-                holder.addToCart.setClickable(false);
+        for (Products myProduct : addedProducts) {
+            if (myProduct.getID() != null) {
+                if (myProduct.getID().equals(products.get(position).getID())) {
+                    holder.addToCart.setText(R.string.added);
+                    holder.addToCart.setClickable(false);
+                }
             }
+        }
+
+        for (Products myProduct : wishListProducts) {
+            if (myProduct.getID() != null) {
+                if (myProduct.getID().equals(products.get(position).getID())) {
+                    holder.imgFav.setImageResource(R.drawable.ic_heart_fill);
+                    holder.imgFav.setClickable(false);
+                }
             }
         }
     }
@@ -82,6 +93,31 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
     @Override
     public int getItemCount() {
         return products.size();
+    }
+
+    private void getMyWishListItems() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                .collection("myWishList")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
+                    Products myProduct = snapshot.toObject(Products.class);
+                    assert myProduct != null;
+                    myProduct.setID(snapshot.getId());
+                    wishListProducts.add(myProduct);
+                    Log.i(TAG, "onSuccess: " + snapshot.toObject(Products.class));
+                }
+                notifyDataSetChanged();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: " + e.getMessage());
+            }
+        });
     }
 
     public class MyProductsHolder extends RecyclerView.ViewHolder {
@@ -105,7 +141,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
                 @Override
                 public void onClick(View v) {
                     if (quantityPicker.getQuantity() > 0) {
-                        addToCart.setText("Added");
+                        addToCart.setText(R.string.added);
                         addToCart.setClickable(false);
 
                         Products myProduct = products.get(getLayoutPosition());
@@ -117,6 +153,37 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
                     } else {
                         Toast.makeText(context, "Items Can't Be 0!", Toast.LENGTH_SHORT).show();
                     }
+                }
+            });
+
+            imgFav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imgFav.setImageResource(R.drawable.ic_heart_fill);
+                    addItemsToWishList(products.get(getLayoutPosition()));
+                    imgFav.setClickable(false);
+                }
+            });
+        }
+
+        private void addItemsToWishList(Products myProduct) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users")
+                    .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                    .collection("myWishList")
+                    .document(myProduct.getID())
+                    .set(myProduct)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Added To Wishlist"
+                                    , Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i(TAG, "onFailure: " + e.getMessage());
+                    imgFav.setImageResource(R.drawable.ic_heart);
                 }
             });
         }
@@ -142,7 +209,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
             });
         }
     }
-
 
     private void getMyCartFromFirebase(){
         FirebaseFirestore db=FirebaseFirestore.getInstance();

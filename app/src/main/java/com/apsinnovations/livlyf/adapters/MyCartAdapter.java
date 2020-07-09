@@ -21,18 +21,25 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHolder> {
     Context context;
     int resource;
     ArrayList<Products> products;
+    TextView txtAmt, txtShip, txtTax;
+    Button btnPay;
 
     private static final String TAG = "MyCartAdapter";
-    public MyCartAdapter(Context context, int resource,ArrayList<Products> products) {
+
+    public MyCartAdapter(Context context, int resource, ArrayList<Products> products, TextView txtAmt, TextView txtShip, TextView txtTax, Button btnPay) {
         this.context = context;
         this.resource = resource;
-        this.products=products;
+        this.products = products;
+        this.txtAmt = txtAmt;
+        this.txtShip = txtShip;
+        this.txtTax = txtTax;
+        this.btnPay = btnPay;
     }
 
     @NonNull
@@ -50,6 +57,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
         holder.txtMrp.setPaintFlags(holder.txtMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.txtDis.setText("-".concat(String.valueOf(products.get(position).getDiscount())).concat("%"));
         holder.txtQty.setText(String.valueOf(products.get(position).getQty()));
+        holder.txtShipping.setText("\u20B9".concat(String.valueOf(products.get(position).getShipping())));
     }
 
     @Override
@@ -63,20 +71,21 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
     }
 
     public class MyCartHolder extends RecyclerView.ViewHolder {
-        ImageView imgProduct,imgDelete;
-        TextView txtName,txtPrice,txtMrp,txtDis,txtQty;
+        ImageView imgProduct, imgDelete;
+        TextView txtName, txtPrice, txtMrp, txtDis, txtQty, txtShipping;
         Button btnBuyNow;
 
         public MyCartHolder(@NonNull View itemView) {
             super(itemView);
-            imgProduct=itemView.findViewById(R.id.cart_img_Product);
-            imgDelete=itemView.findViewById(R.id.imgDeleteCart);
-            txtName=itemView.findViewById(R.id.cart_product_name);
-            txtPrice=itemView.findViewById(R.id.cart_product_price);
-            txtMrp=itemView.findViewById(R.id.cart_product_mrp);
-            txtDis=itemView.findViewById(R.id.cart_product_discount);
-            txtQty=itemView.findViewById(R.id.cart_txtQty);
-            btnBuyNow=itemView.findViewById(R.id.btnBuyNow);
+            imgProduct = itemView.findViewById(R.id.cart_img_Product);
+            imgDelete = itemView.findViewById(R.id.imgDeleteCart);
+            txtName = itemView.findViewById(R.id.cart_product_name);
+            txtPrice = itemView.findViewById(R.id.cart_product_price);
+            txtMrp = itemView.findViewById(R.id.cart_product_mrp);
+            txtDis = itemView.findViewById(R.id.cart_product_discount);
+            txtShipping = itemView.findViewById(R.id.cart_txtShipping);
+            txtQty = itemView.findViewById(R.id.cart_txtQty);
+//            btnBuyNow=itemView.findViewById(R.id.btnBuyNow);
 
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,8 +107,24 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
                         public void onSuccess(Void aVoid) {
                             products.remove(getLayoutPosition());
                             notifyItemRemoved(getLayoutPosition());
+                            updateTransaction();
                         }
                     });
+        }
+
+        private void updateTransaction() {
+            double amt = 0, ship = 0, total = 0;
+            float tax = 0;
+            for (Products myProduct : products) {
+                amt += myProduct.getPrice() * myProduct.getQty();
+                ship += myProduct.getShipping();
+            }
+            total = amt + ship;
+            tax = (float) (0.05 * total);
+            txtAmt.setText("\u20B9".concat(String.valueOf(amt)));
+            txtShip.setText("\u20B9".concat(String.valueOf(ship)));
+            txtTax.setText("\u20B9".concat(String.valueOf(tax)));
+            btnPay.setText("Pay ".concat("\u20B9").concat(String.valueOf(total)));
         }
     }
 }
