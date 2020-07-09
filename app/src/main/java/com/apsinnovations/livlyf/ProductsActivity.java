@@ -1,5 +1,6 @@
 package com.apsinnovations.livlyf;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
+        getSupportActionBar().setElevation(0);
         recyclerView = findViewById(R.id.recyclerProducts);
         products = new ArrayList<>();
         cartPrefMananger = new CartPrefMananger(this);
@@ -102,39 +104,53 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
     }
 
     private void updateCart() {
-        MenuItem item = menu.findItem(R.id.opt_cart);
+        final MenuItem item = menu.findItem(R.id.opt_cart);
         item.setActionView(R.layout.cart_notification_badge);
         View view = item.getActionView();
         TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
         tv.setText(String.valueOf(items));
-
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(item);
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+
         this.menu = menu;
         if (items > 0) {
-            MenuItem item = menu.findItem(R.id.opt_cart);
+            final MenuItem item = menu.findItem(R.id.opt_cart);
             item.setActionView(R.layout.cart_notification_badge);
             View view = item.getActionView();
             TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
             tv.setText(String.valueOf(items));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onOptionsItemSelected(item);
+                }
+            });
         }
 
 //        MenuItemCompat.setActionView(item, R.layout.cart_notification_badge);
 //        RelativeLayout notifCount = (RelativeLayout)   MenuItemCompat.getActionView(item);
 //        RelativeLayout badgeLayout = (RelativeLayout)    menu.findItem(R.id.opt_cart).getActionView();
 
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.opt_cart:
-                break;
+        Log.i(TAG, "onOptionsItemSelected: Reached");
+        if (id == R.id.opt_cart) {
+            Log.i(TAG, "onOptionsItemSelected: Cart Selected");
+            Intent intent1 = new Intent(this, MyCartActivity.class);
+            startActivity(intent1);
         }
         return true;
     }

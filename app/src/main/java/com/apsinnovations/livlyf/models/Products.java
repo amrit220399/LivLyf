@@ -4,7 +4,11 @@ import java.io.Serializable;
 
 public class Products implements Serializable {
     int price, mrp, qty, shipping, discount;
-    private String ID, name, category, url;
+    String ID, name, category, url;
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
 
     public Products() {
 
@@ -55,6 +59,10 @@ public class Products implements Serializable {
 
     public int getDiscount() {
         return discount;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
     }
 
     @Override

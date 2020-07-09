@@ -15,7 +15,7 @@
     <!-- dots active colors -->
     <color name="dot_light_screen1">#8de7f9</color>
     <color name="dot_light_screen2">#8cf9eb</color>
-
+    <color name="red_400">#EF5350</color>
     <color name="colorTransGreen">#8D0FB892</color>
     <color name="colorTransYellow">#B7FFFF8D</color>
     <color name="colorTransBlue">#CE80D8FF</color>

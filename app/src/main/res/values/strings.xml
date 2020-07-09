@@ -39,4 +39,8 @@
     <string name="wishlist">Wishlist</string>
     <string name="wallet">Wallet</string>
     <string name="support">Support</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="_0">0</string>
+    <string name="qty">Qty:</string>
+    <string name="livlyf_assured">LivLyf Assured</string>
 </resources>

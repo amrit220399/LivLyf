@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.apsinnovations.livlyf.models.Products;
 import com.apsinnovations.livlyf.models.User;
 import com.apsinnovations.livlyf.utils.PrefManager;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -156,6 +158,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void saveUserInFirebase() {
+        Products order=new Products();
         FirebaseFirestore db=FirebaseFirestore.getInstance();
         db.collection("users")
                 .document(firebaseUser.getUid())
@@ -177,6 +180,21 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
 
+            }
+        });
+
+        db.collection("users")
+                .document(firebaseUser.getUid())
+                .collection("orders")
+                .add(order).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.i(TAG, "onSuccess: Order Created");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: Order Failed");
             }
         });
     }

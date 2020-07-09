@@ -19,6 +19,12 @@ import com.apsinnovations.livlyf.R;
 import com.apsinnovations.livlyf.models.Products;
 import com.apsinnovations.livlyf.utils.CartPrefMananger;
 import com.apsinnovations.livlyf.utils.MyCartListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -29,6 +35,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
     ArrayList<Products> products;
     MyCartListener myCartListener;
     CartPrefMananger cartPrefMananger;
+    ArrayList<Products> addedProducts;
+    private static final String TAG = "ProductsAdapter";
 
     public ProductsAdapter(Context context, int resource, ArrayList<Products> products) {
         this.context = context;
@@ -40,6 +48,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
             Log.i("Exception Caught", "" + e.getMessage());
         }
         cartPrefMananger = new CartPrefMananger(context);
+        addedProducts=new ArrayList<>();
+        getMyCartFromFirebase();
     }
 
     @NonNull
@@ -55,9 +65,19 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
         holder.txtPrice.setText("\u20B9".concat(String.valueOf(products.get(position).getPrice())));
         holder.txtMRP.setText("\u20B9".concat(String.valueOf(products.get(position).getMrp())));
         holder.txtMRP.setPaintFlags(holder.txtMRP.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.txtDisocunt.setText("-".concat(String.valueOf(products.get(position).getDiscount())).concat("%"));
+        holder.txtDisocunt.setText("-".concat(String.valueOf
+                (products.get(position).getDiscount())).concat("%"));
         holder.quantityPicker.setMaxQuantity(products.get(position).getQty());
         holder.quantityPicker.setMinQuantity(1);
+
+        for(Products myProduct:addedProducts){
+            if(myProduct.getID()!=null){
+            if(myProduct.getID().equals(products.get(position).getID())){
+                holder.addToCart.setText("Added");
+                holder.addToCart.setClickable(false);
+            }
+            }
+        }
     }
 
     @Override
@@ -90,11 +110,64 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
                         addToCart.setClickable(false);
                         myCartListener.setItems(quantityPicker.getQuantity());
                         cartPrefMananger.setItemsCount(quantityPicker.getQuantity());
+                        Products myProduct = products.get(getLayoutPosition());
+                        myProduct.setQty(quantityPicker.getQuantity());
+
+                        addItemToCartInFirebase(myProduct);
+
+//                        cartPrefMananger.setCartItem(myProduct);
                     } else {
                         Toast.makeText(context, "Items Can't Be 0!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
+
+        private void addItemToCartInFirebase(Products myProduct) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .collection("myCart")
+                    .document(myProduct.getID())
+                    .set(myProduct)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i(TAG, "onSuccess: Added to Cart");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i(TAG, "onFailure: " + e.getMessage());
+                }
+            });
+        }
     }
+
+
+    private void getMyCartFromFirebase(){
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .collection("myCart")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot snapshot:queryDocumentSnapshots.getDocuments()){
+                    Products myProduct=snapshot.toObject(Products.class);
+                    assert myProduct != null;
+                    myProduct.setID(snapshot.getId());
+                    addedProducts.add(myProduct);
+                    Log.i(TAG, "onSuccess: "+snapshot.toObject(Products.class));
+                }
+                notifyDataSetChanged();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: "+e.getMessage());
+            }
+        });
+    }
+
 }

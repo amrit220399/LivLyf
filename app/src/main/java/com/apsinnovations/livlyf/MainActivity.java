@@ -43,14 +43,14 @@ public class MainActivity extends AppCompatActivity {
         Drawable drawable = getDrawable(R.drawable.livlogo);
         drawable.setTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite)));
         toolbar.setLogo(drawable);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -71,13 +71,21 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         this.menu = menu;
+
         if (items > 0) {
-            MenuItem item = menu.findItem(R.id.opt_cart);
+            final MenuItem item = menu.findItem(R.id.opt_cart);
             item.setActionView(R.layout.cart_notification_badge);
             View view = item.getActionView();
             TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
             tv.setText(String.valueOf(items));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onOptionsItemSelected(item);
+                }
+            });
         }
+
         return true;
     }
 
@@ -93,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.opt_cart:
+                Intent intent1=new Intent(this,MyCartActivity.class);
+                startActivity(intent1);
                 break;
 
         }
@@ -109,12 +119,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateCart() {
         items = cartPrefMananger.getItemsCount();
-        MenuItem item = menu.findItem(R.id.opt_cart);
-        item.setActionView(R.layout.cart_notification_badge);
-        View view = item.getActionView();
-        TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
-        tv.setText(String.valueOf(items));
-
+        if(items>0) {
+            final MenuItem item = menu.findItem(R.id.opt_cart);
+            item.setActionView(R.layout.cart_notification_badge);
+            View view = item.getActionView();
+            TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
+            tv.setText(String.valueOf(items));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onOptionsItemSelected(item);
+                }
+            });
+        }
     }
 
     @Override
