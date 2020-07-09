@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apsinnovations.livlyf.R;
 import com.apsinnovations.livlyf.models.Products;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -74,7 +77,29 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
             txtDis=itemView.findViewById(R.id.cart_product_discount);
             txtQty=itemView.findViewById(R.id.cart_txtQty);
             btnBuyNow=itemView.findViewById(R.id.btnBuyNow);
+
+            imgDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteMyItemFromCart();
+                }
+            });
         }
 
+        private void deleteMyItemFromCart(){
+            FirebaseFirestore db=FirebaseFirestore.getInstance();
+            db.collection("users")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .collection("myCart")
+                    .document(products.get(getLayoutPosition()).getID())
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            products.remove(getLayoutPosition());
+                            notifyItemRemoved(getLayoutPosition());
+                        }
+                    });
+        }
     }
 }

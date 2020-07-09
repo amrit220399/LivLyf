@@ -31,6 +31,7 @@ public class MyCartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
         getSupportActionBar().setElevation(0);
+        getSupportActionBar().setTitle("MyCart");
 
 //        products=cartPrefMananger.getCartItems();
         recyclerCart=findViewById(R.id.recyclerCart);

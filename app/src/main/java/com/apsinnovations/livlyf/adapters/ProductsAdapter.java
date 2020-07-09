@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProductsHolder> {
     Context context;
@@ -105,7 +106,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
                     if (quantityPicker.getQuantity() > 0) {
                         addToCart.setText("Added");
                         addToCart.setClickable(false);
-                        myCartListener.setItems(quantityPicker.getQuantity());
+
                         Products myProduct = products.get(getLayoutPosition());
                         myProduct.setQty(quantityPicker.getQuantity());
 
@@ -122,13 +123,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
         private void addItemToCartInFirebase(Products myProduct) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("users")
-                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                     .collection("myCart")
                     .document(myProduct.getID())
                     .set(myProduct)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            myCartListener.setItems(1);
                             Log.i(TAG, "onSuccess: Added to Cart");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -144,7 +146,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
     private void getMyCartFromFirebase(){
         FirebaseFirestore db=FirebaseFirestore.getInstance();
         db.collection("users")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .collection("myCart")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override

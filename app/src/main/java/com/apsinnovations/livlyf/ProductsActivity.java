@@ -35,6 +35,7 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
     ArrayList<Products> products;
     int items;
     Menu menu;
+//    boolean isFirstTymResume=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +45,14 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         recyclerView = findViewById(R.id.recyclerProducts);
         products = new ArrayList<>();
         setAdapter();
-        new MyAsyncTask().execute("");
+//        new MyAsyncTask().execute("");
 //        fetchProducts();
     }
 
     private void fetchProducts() {
+        if(!products.isEmpty()){
+            products.clear();
+        }
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(Objects.requireNonNull(getIntent().getStringExtra("name")))
                 .whereEqualTo("category", getIntent().getStringExtra("category"))
@@ -60,7 +64,7 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
 //                    Products myproduct=snapshot.toObject(Products.class);
                     products.add(snapshot.toObject(Products.class));
                 }
-                productsAdapter.notifyDataSetChanged();
+              setAdapter();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -228,4 +232,20 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
             return null;
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        isFirstTymResume=false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        if(!isFirstTymResume){
+//            getMyCartCount();
+//        }
+        new MyAsyncTask().execute("");
+    }
+
 }

@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: "+e.getMessage());
+                
             }
         });
     }
