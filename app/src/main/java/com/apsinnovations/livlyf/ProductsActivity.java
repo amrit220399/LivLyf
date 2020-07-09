@@ -90,6 +90,7 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: "+e.getMessage());
+                updateCart();
             }
         });
     }
@@ -124,17 +125,22 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
     }
 
     private void updateCart() {
-        final MenuItem item = menu.findItem(R.id.opt_cart);
-        item.setActionView(R.layout.cart_notification_badge);
-        View view = item.getActionView();
-        TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
-        tv.setText(String.valueOf(items));
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onOptionsItemSelected(item);
-            }
-        });
+        if(items>0) {
+            final MenuItem item = menu.findItem(R.id.opt_cart);
+            item.setActionView(R.layout.cart_notification_badge);
+            View view = item.getActionView();
+            TextView tv = view.findViewById(R.id.actionbar_notifcation_textview);
+            tv.setText(String.valueOf(items));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onOptionsItemSelected(item);
+                }
+            });
+        }else{
+            MenuItem item = menu.findItem(R.id.opt_cart);
+            item.setActionView(null);
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.apsinnovations.livlyf.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
 import android.util.Log;

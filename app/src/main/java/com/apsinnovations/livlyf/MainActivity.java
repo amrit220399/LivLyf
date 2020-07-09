@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         this.menu = menu;
-
         return true;
     }
 
@@ -120,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
                     onOptionsItemSelected(item);
                 }
             });
+        }else{
+            MenuItem item = menu.findItem(R.id.opt_cart);
+            item.setActionView(null);
         }
     }
 
@@ -152,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: "+e.getMessage());
-                
+              updateCart();
             }
         });
     }
