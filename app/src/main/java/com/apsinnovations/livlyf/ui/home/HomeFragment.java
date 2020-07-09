@@ -24,8 +24,6 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     SliderView sliderView;
     RecyclerView recyclerCategories;
-    private SliderAdapter sliderAdapter;
-    private HomeCategoriesAdapter homeCategoriesAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,11 +34,15 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         sliderView = root.findViewById(R.id.imageSlider);
         recyclerCategories = root.findViewById(R.id.recyclerHomeCategories);
-        homeCategoriesAdapter = new HomeCategoriesAdapter(getContext(), R.layout.card_home_categories);
+
+
+        HomeCategoriesAdapter homeCategoriesAdapter = new HomeCategoriesAdapter(getContext(), R.layout.card_home_categories);
         recyclerCategories.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerCategories.setHasFixedSize(true);
         recyclerCategories.setAdapter(homeCategoriesAdapter);
-        sliderAdapter = new SliderAdapter(getContext());
+
+
+        SliderAdapter sliderAdapter = new SliderAdapter(getContext());
         sliderView.setSliderAdapter(sliderAdapter);
         sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM); //set indicator animation by
         // using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or

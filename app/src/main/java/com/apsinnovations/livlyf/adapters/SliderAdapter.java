@@ -48,7 +48,7 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.MySliderHolde
 
     @Override
     public void onBindViewHolder(MySliderHolder viewHolder, final int position) {
-        SliderItem sliderItem = mSliderItems.get(position);
+        final SliderItem sliderItem = mSliderItems.get(position);
 
         viewHolder.textViewDescription.setText(sliderItem.getDescription());
         viewHolder.textViewDescription.setTextSize(16);
@@ -61,7 +61,7 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.MySliderHolde
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "This is item in position " + position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, sliderItem.getDescription(), Toast.LENGTH_SHORT).show();
             }
         });
     }

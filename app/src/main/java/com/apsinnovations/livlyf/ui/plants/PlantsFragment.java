@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apsinnovations.livlyf.R;
-import com.apsinnovations.livlyf.adapters.PlantCategoriesAdapter;
+import com.apsinnovations.livlyf.adapters.CategoriesAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,7 +28,7 @@ public class PlantsFragment extends Fragment {
     private static final String TAG = "PlantsFragment";
     RecyclerView recyclerPlants;
     ProgressBar progressBar;
-    PlantCategoriesAdapter categoriesAdapter;
+    CategoriesAdapter categoriesAdapter;
     ArrayList<HashMap<String, String>> Names;
 
     @Override
@@ -46,7 +46,7 @@ public class PlantsFragment extends Fragment {
 
 
     private void setAdapter() {
-        categoriesAdapter = new PlantCategoriesAdapter(getContext(), R.layout.card_plant_categories, Names);
+        categoriesAdapter = new CategoriesAdapter(getContext(), R.layout.card_plant_categories, Names, "plants");
         recyclerPlants.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerPlants.setAdapter(categoriesAdapter);
         progressBar.setVisibility(View.GONE);
