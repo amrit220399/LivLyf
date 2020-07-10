@@ -1,6 +1,7 @@
 package com.apsinnovations.livlyf.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.apsinnovations.livlyf.AddressActivity;
 import com.apsinnovations.livlyf.R;
 import com.apsinnovations.livlyf.models.Products;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,18 +22,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
-public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHolder> {
+public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHolder> implements View.OnClickListener {
     Context context;
     int resource;
     ArrayList<Products> products;
     TextView txtAmt, txtShip, txtTax, txtEmptyCart;
     Button btnPay;
+    double amt = 0, ship = 0, total = 0;
+    float tax = 0;
 
+    String uid;
+    FirebaseFirestore db;
     private static final String TAG = "MyCartAdapter";
 
-    public MyCartAdapter(Context context, int resource, ArrayList<Products> products, TextView txtAmt, TextView txtShip, TextView txtTax, Button btnPay, TextView txtEmptyCart) {
+    public MyCartAdapter(Context context, int resource, ArrayList<Products> products, TextView txtAmt,
+                         TextView txtShip, TextView txtTax, Button btnPay, TextView txtEmptyCart, double total) {
         this.context = context;
         this.resource = resource;
         this.products = products;
@@ -39,6 +47,11 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
         this.txtShip = txtShip;
         this.txtTax = txtTax;
         this.btnPay = btnPay;
+        this.total = total;
+        db = FirebaseFirestore.getInstance();
+        uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+        btnPay.setOnClickListener(this);
         this.txtEmptyCart = txtEmptyCart;
     }
 
@@ -71,10 +84,20 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
         }
     }
 
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btnPay) {
+            Intent intent = new Intent(context, AddressActivity.class);
+            intent.putExtra("orderVal", total);
+            intent.putExtra("items", products);
+            context.startActivity(intent);
+        }
+    }
+
     public class MyCartHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct, imgDelete;
         TextView txtName, txtPrice, txtMrp, txtDis, txtQty, txtShipping;
-        Button btnBuyNow;
 
         public MyCartHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,7 +109,6 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
             txtDis = itemView.findViewById(R.id.cart_product_discount);
             txtShipping = itemView.findViewById(R.id.cart_txtShipping);
             txtQty = itemView.findViewById(R.id.cart_txtQty);
-//            btnBuyNow=itemView.findViewById(R.id.btnBuyNow);
 
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,12 +116,14 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
                     deleteMyItemFromCart();
                 }
             });
+
+
         }
 
         private void deleteMyItemFromCart(){
             FirebaseFirestore db=FirebaseFirestore.getInstance();
             db.collection("users")
-                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .document(uid)
                     .collection("myCart")
                     .document(products.get(getLayoutPosition()).getID())
                     .delete()
@@ -114,8 +138,6 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
         }
 
         private void updateTransaction() {
-            double amt = 0, ship = 0, total = 0;
-            float tax = 0;
             for (Products myProduct : products) {
                 amt += myProduct.getPrice() * myProduct.getQty();
                 ship += myProduct.getShipping();
@@ -127,6 +149,9 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
             txtShip.setText("\u20B9".concat(String.valueOf(ship)));
             txtTax.setText("\u20B9".concat(String.valueOf(tax)));
             btnPay.setText("Pay ".concat("\u20B9").concat(String.valueOf(total)));
+
         }
+
+
     }
 }

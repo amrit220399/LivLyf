@@ -3,12 +3,14 @@ package com.apsinnovations.livlyf;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,19 +22,25 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.apsinnovations.livlyf.models.User;
 import com.apsinnovations.livlyf.utils.MyCartListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MyCartListener {
 
     private AppBarConfiguration mAppBarConfiguration;
+    TextView txtName, txtEmail;
+    ImageView imgProfile;
+    View hView;
     int items;
     boolean isFirstTymResume = true;
     Menu menu;
@@ -58,6 +66,11 @@ public class MainActivity extends AppCompatActivity implements MyCartListener {
 //        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        hView = navigationView.getHeaderView(0);
+        txtName = hView.findViewById(R.id.HV_txtName);
+        txtEmail = hView.findViewById(R.id.HV_txtEmail);
+        imgProfile = hView.findViewById(R.id.HV_img);
+        fetchProfile();
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -69,6 +82,28 @@ public class MainActivity extends AppCompatActivity implements MyCartListener {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    private void fetchProfile() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                txtName.setText(user.getName());
+                txtEmail.setText(user.getPassword());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: " + e.getMessage());
+            }
+        });
+
+        Uri uri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        Picasso.get().load(uri).fit().into(imgProfile);
     }
 
     @Override

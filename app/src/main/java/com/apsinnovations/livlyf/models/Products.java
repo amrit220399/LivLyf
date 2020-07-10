@@ -6,6 +6,7 @@ public class Products implements Serializable {
     int price, mrp, qty, shipping, discount;
     String ID, name, category, url;
 
+
     public void setID(String ID) {
         this.ID = ID;
     }
@@ -77,4 +78,6 @@ public class Products implements Serializable {
                 ", discount=" + discount +
                 '}';
     }
+
+
 }

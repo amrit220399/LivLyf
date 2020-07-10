@@ -28,7 +28,7 @@ public class MyCartActivity extends AppCompatActivity {
     ArrayList<Products> products;
     TextView txtAmount, txtTaxes, txtShipping, txtEmptyCart;
     Button btnPay;
-    double amount = 0, shipping = 0;
+    double amount = 0, shipping = 0, total = 0;
     float taxes = 0;
     private static final String TAG = "MyCartActivity";
 
@@ -49,7 +49,7 @@ public class MyCartActivity extends AppCompatActivity {
         btnPay = findViewById(R.id.btnPay);
 
         products = new ArrayList<>();
-        setMyCartAdapter();
+//        setMyCartAdapter();
 
         new MyAsyncTask().execute("");
     }
@@ -68,35 +68,36 @@ public class MyCartActivity extends AppCompatActivity {
                     shipping += myProduct.getShipping();
                     products.add(myProduct);
                 }
-                myCartAdapter.notifyDataSetChanged();
                 txtAmount.setText("\u20B9".concat(String.valueOf(amount)));
                 txtShipping.setText("\u20B9".concat(String.valueOf(shipping)));
-                double total = amount + shipping;
+                total = amount + shipping;
                 taxes = (float) (0.05 * total);
                 total += Math.round(taxes);
                 txtTaxes.setText("\u20B9".concat(String.valueOf(taxes)));
                 btnPay.setText("Pay ".concat("\u20B9").concat(String.valueOf(total)));
-
+                setMyCartAdapter();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: "+e.getMessage());
+                Log.i(TAG, "onFailure: " + e.getMessage());
             }
         });
     }
 
-    void setMyCartAdapter(){
-        myCartAdapter = new MyCartAdapter(this, R.layout.card_mycart, products, txtAmount, txtShipping, txtTaxes, btnPay, txtEmptyCart);
+    void setMyCartAdapter() {
+        myCartAdapter = new MyCartAdapter(this, R.layout.card_mycart, products, txtAmount,
+                txtShipping, txtTaxes, btnPay, txtEmptyCart, total);
         recyclerCart.setLayoutManager(new LinearLayoutManager(this));
         recyclerCart.setHasFixedSize(true);
         recyclerCart.setAdapter(myCartAdapter);
     }
-    class MyAsyncTask extends AsyncTask{
+
+    class MyAsyncTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-           getMyCartFromFirebase();
+            getMyCartFromFirebase();
             return null;
         }
 
