@@ -56,6 +56,7 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(Objects.requireNonNull(getIntent().getStringExtra("name")))
                 .whereEqualTo("category", getIntent().getStringExtra("category"))
+                .whereGreaterThan("qty", 0)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -96,12 +97,12 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
     }
     void addProduct(Products products) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("plants")
+        db.collection("pebbles")
                 .add(products).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.i(TAG, "onSuccess: Updated");
-                documentReference.update("ID", documentReference.getId());
+                documentReference.update("id", documentReference.getId());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -187,50 +188,50 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         protected Object doInBackground(Object[] objects) {
             fetchProducts();
             getMyCartCount();
-//            products.add(new Products("Portulaca, 9 O Clock (Any Color)",
-//                    "Flowering Plants",
+//            products.add(new Products("Aquarium Pebbles (Mix Color, Small) - 1 kg",
+//                    "Coloured Pebbles",
 //                    "",
-//                    239,
-//                    499,
-//                    52,
-//                    79,
-//                    52
-//                    ));
-//            products.add(new Products("Rose (Any Color)",
-//                    "Flowering Plants",
-//                    "",
-//                    289,
-//                    499,
-//                    22,
-//                    79,
-//                    42
-//            ));
-//            products.add(new Products("Miniature Rose, Button Rose (white)",
-//                    "Flowering Plants",
-//                    "",
-//                    299,
-//                    699,
+//                    199,
+//                    399,
 //                    12,
-//                    89,
-//                    57
-//            ));
-//            products.add(new Products("Stachytarpheta (Any Color)",
-//                    "Flowering Plants",
-//                    "",
-//                    339,
-//                    799,
-//                    18,
-//                    99,
-//                    57
-//            ));
-//            products.add(new Products("Hydrangea macrophylla (Any Color)",
-//                    "Flowering Plants",
-//                    "",
-//                    339,
-//                    799,
-//                    4,
 //                    79,
-//                    57
+//                    50
+//                    ));
+//            products.add(new Products("Onex Pebbles (Mix Color, Medium)- 1 kg",
+//                    "Coloured Pebbles",
+//                    "",
+//                    335,
+//                    699,
+//                    10,
+//                    50,
+//                    53
+//            ));
+//            products.add(new Products("Aquarium Pebbles (Green, Small) - 1 kg",
+//                    "Aquarium Pebbles",
+//                    "",
+//                    149,
+//                    299,
+//                    12,
+//                    79,
+//                    50
+//            ));
+//            products.add(new Products("Aquarium Pebbles (Navy Blue, Medium) - 1 kg",
+//                    "Aquarium Pebbles",
+//                    "",
+//                    154,
+//                    299,
+//                    18,
+//                    49,
+//                    48
+//            ));
+//            products.add(new Products("Stone Sand (Black) - 1 kg",
+//                    "Sand Stones",
+//                    "",
+//                    152,
+//                    299,
+//                    8,
+//                    49,
+//                    49
 //            ));
 //            for(int i=0;i<products.size();i++){
 //                addProduct(products.get(i));

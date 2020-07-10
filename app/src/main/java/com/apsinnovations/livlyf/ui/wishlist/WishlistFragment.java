@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,7 @@ public class WishlistFragment extends Fragment {
     RecyclerView recyclerWishList;
     MyWishListAdapter myWishListAdapter;
     ArrayList<Products> products;
+    TextView txtEmptyWishList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +41,7 @@ public class WishlistFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
         View view = inflater.inflate(R.layout.fragment_wishlist, container, false);
         recyclerWishList = view.findViewById(R.id.recyclerWishList);
+        txtEmptyWishList = view.findViewById(R.id.txtEmptyWishList);
         products = new ArrayList<>();
         setMyAdapter();
         new MyAsyncTask().execute("");
@@ -46,7 +49,7 @@ public class WishlistFragment extends Fragment {
     }
 
     private void setMyAdapter() {
-        myWishListAdapter = new MyWishListAdapter(getContext(), R.layout.card_wishlist, products);
+        myWishListAdapter = new MyWishListAdapter(getContext(), R.layout.card_wishlist, products, txtEmptyWishList);
         recyclerWishList.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerWishList.setAdapter(myWishListAdapter);
     }

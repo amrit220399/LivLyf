@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.apsinnovations.livlyf.utils.MyCartListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
@@ -29,7 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyCartListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     int items;
@@ -153,13 +154,18 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: "+e.getMessage());
-              updateCart();
+                Log.i(TAG, "onFailure: " + e.getMessage());
+                updateCart();
             }
         });
     }
 
-    class MyAsyncTask extends AsyncTask{
+    @Override
+    public void setItems(int itemsCount) {
+        new MyAsyncTask().execute("");
+    }
+
+    class MyAsyncTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) {

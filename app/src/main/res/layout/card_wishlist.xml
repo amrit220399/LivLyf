@@ -130,6 +130,16 @@
                             android:tint="@android:color/darker_gray" />
                     </LinearLayout>
 
+                    <com.andanhm.quantitypicker.QuantityPicker
+                        android:id="@+id/wish_quantityPicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        app:buttonColor="@color/colorAccent"
+                        app:maxQuantity="5"
+                        app:minQuantity="1"
+                        app:quantityColor="@color/colorPrimary"
+                        app:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -146,14 +156,14 @@
 
 
             <Button
-                android:id="@+id/wish_btnBuyNow"
+                android:id="@+id/wish_btnAddToCart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="80dp"
                 android:background="@drawable/btn_rounded"
                 android:padding="12dp"
-                android:text="@string/buy_now"
+                android:text="@string/add_to_cart"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp" />
 

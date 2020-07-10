@@ -2,7 +2,6 @@ package com.apsinnovations.livlyf.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +26,12 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
     Context context;
     int resource;
     ArrayList<Products> products;
-    TextView txtAmt, txtShip, txtTax;
+    TextView txtAmt, txtShip, txtTax, txtEmptyCart;
     Button btnPay;
 
     private static final String TAG = "MyCartAdapter";
 
-    public MyCartAdapter(Context context, int resource, ArrayList<Products> products, TextView txtAmt, TextView txtShip, TextView txtTax, Button btnPay) {
+    public MyCartAdapter(Context context, int resource, ArrayList<Products> products, TextView txtAmt, TextView txtShip, TextView txtTax, Button btnPay, TextView txtEmptyCart) {
         this.context = context;
         this.resource = resource;
         this.products = products;
@@ -40,6 +39,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
         this.txtShip = txtShip;
         this.txtTax = txtTax;
         this.btnPay = btnPay;
+        this.txtEmptyCart = txtEmptyCart;
     }
 
     @NonNull
@@ -62,10 +62,11 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
 
     @Override
     public int getItemCount() {
-        if(products==null){
-            Log.i(TAG, "getItemCount: NULL ");
+        if (products.size() == 0) {
+            txtEmptyCart.setVisibility(View.VISIBLE);
             return 0;
-        }else{
+        } else {
+            txtEmptyCart.setVisibility(View.GONE);
             return products.size();
         }
     }
@@ -121,6 +122,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
             }
             total = amt + ship;
             tax = (float) (0.05 * total);
+            total += Math.round(tax);
             txtAmt.setText("\u20B9".concat(String.valueOf(amt)));
             txtShip.setText("\u20B9".concat(String.valueOf(ship)));
             txtTax.setText("\u20B9".concat(String.valueOf(tax)));

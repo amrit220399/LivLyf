@@ -26,7 +26,7 @@ public class MyCartActivity extends AppCompatActivity {
     RecyclerView recyclerCart;
     MyCartAdapter myCartAdapter;
     ArrayList<Products> products;
-    TextView txtAmount, txtTaxes, txtShipping;
+    TextView txtAmount, txtTaxes, txtShipping, txtEmptyCart;
     Button btnPay;
     double amount = 0, shipping = 0;
     float taxes = 0;
@@ -45,6 +45,7 @@ public class MyCartActivity extends AppCompatActivity {
         txtAmount = findViewById(R.id.txtTaxAmount);
         txtShipping = findViewById(R.id.txtTotalShipping);
         txtTaxes = findViewById(R.id.Taxes);
+        txtEmptyCart = findViewById(R.id.txtEmptyCart);
         btnPay = findViewById(R.id.btnPay);
 
         products = new ArrayList<>();
@@ -72,7 +73,7 @@ public class MyCartActivity extends AppCompatActivity {
                 txtShipping.setText("\u20B9".concat(String.valueOf(shipping)));
                 double total = amount + shipping;
                 taxes = (float) (0.05 * total);
-                total += taxes;
+                total += Math.round(taxes);
                 txtTaxes.setText("\u20B9".concat(String.valueOf(taxes)));
                 btnPay.setText("Pay ".concat("\u20B9").concat(String.valueOf(total)));
 
@@ -86,7 +87,7 @@ public class MyCartActivity extends AppCompatActivity {
     }
 
     void setMyCartAdapter(){
-        myCartAdapter = new MyCartAdapter(this, R.layout.card_mycart, products, txtAmount, txtShipping, txtTaxes, btnPay);
+        myCartAdapter = new MyCartAdapter(this, R.layout.card_mycart, products, txtAmount, txtShipping, txtTaxes, btnPay, txtEmptyCart);
         recyclerCart.setLayoutManager(new LinearLayoutManager(this));
         recyclerCart.setHasFixedSize(true);
         recyclerCart.setAdapter(myCartAdapter);
