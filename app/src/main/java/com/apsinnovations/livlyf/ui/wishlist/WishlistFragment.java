@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class WishlistFragment extends Fragment {
     MyWishListAdapter myWishListAdapter;
     ArrayList<Products> products;
     TextView txtEmptyWishList;
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +44,7 @@ public class WishlistFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wishlist, container, false);
         recyclerWishList = view.findViewById(R.id.recyclerWishList);
         txtEmptyWishList = view.findViewById(R.id.txtEmptyWishList);
+        progressBar = view.findViewById(R.id.wish_progress);
         products = new ArrayList<>();
         setMyAdapter();
         new MyAsyncTask().execute("");
@@ -49,7 +52,7 @@ public class WishlistFragment extends Fragment {
     }
 
     private void setMyAdapter() {
-        myWishListAdapter = new MyWishListAdapter(getContext(), R.layout.card_wishlist, products, txtEmptyWishList);
+        myWishListAdapter = new MyWishListAdapter(getContext(), R.layout.card_wishlist, products);
         recyclerWishList.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerWishList.setAdapter(myWishListAdapter);
     }
@@ -62,9 +65,16 @@ public class WishlistFragment extends Fragment {
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (queryDocumentSnapshots.getDocuments().size() == 0) {
+                    progressBar.setVisibility(View.GONE);
+                    txtEmptyWishList.setVisibility(View.VISIBLE);
+                    return;
+                }
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
                     products.add(snapshot.toObject(Products.class));
                 }
+                progressBar.setVisibility(View.GONE);
+                txtEmptyWishList.setVisibility(View.GONE);
                 myWishListAdapter.notifyDataSetChanged();
             }
         }).addOnFailureListener(new OnFailureListener() {

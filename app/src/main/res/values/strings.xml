@@ -49,4 +49,25 @@
     <string name="shipping">Shipping:</string>
     <string name="no_wishlist_items">No WishList Items!</string>
     <string name="add_to_cart">Add To Cart</string>
+    <string name="no_orders_yet">No Orders Yet!</string>
+    <string name="status">Status</string>
+    <string name="items">Items</string>
+    <string name="pending">Pending</string>
+    <string name="mmm_dd_yyyy_hh_mm">MMM dd yyyy hh:mm</string>
+    <string name="amount">Amount</string>
+    <string name="ordered_at">Ordered At</string>
+    <string name="order_id">Order ID</string>
+    <string name="_00000000000000">#00000000000000</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_products_found">No Products Found!</string>
+    <string name="receiver_name">Receiver Name</string>
+    <string name="address">Address</string>
+    <string name="cash_on_delivery">Cash On Delivery</string>
+    <string name="payment_mode">Payment Mode</string>
+    <string name="contact_details">Contact Details (+91)</string>
+    <string name="pin_code">Pin Code</string>
+    <string name="state">State</string>
+    <string name="landmark">Landmark</string>
+    <string name="payment_mode_cod">Payment Mode : COD</string>
+    <string name="delivery_address">Delivery Address</string>
 </resources>

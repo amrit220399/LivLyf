@@ -35,14 +35,12 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
     ArrayList<Products> products;
     private static final String TAG = "MyWishListAdapter";
     ArrayList<Products> addedProducts;
-    TextView txtEmptyWishList;
     MyCartListener myCartListener;
 
-    public MyWishListAdapter(Context context, int resource, ArrayList<Products> products, TextView txtEmptyWishList) {
+    public MyWishListAdapter(Context context, int resource, ArrayList<Products> products) {
         this.context = context;
         this.resource = resource;
         this.products = products;
-        this.txtEmptyWishList = txtEmptyWishList;
         addedProducts = new ArrayList<>();
         myCartListener = (MyCartListener) context;
         getMyCartFromFirebase();
@@ -102,14 +100,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
 
     @Override
     public int getItemCount() {
-        if (products.size() == 0) {
-            txtEmptyWishList.setVisibility(View.VISIBLE);
-            return 0;
-        } else {
-            txtEmptyWishList.setVisibility(View.GONE);
             return products.size();
-        }
-
     }
 
     public class MyWishListHolder extends RecyclerView.ViewHolder {

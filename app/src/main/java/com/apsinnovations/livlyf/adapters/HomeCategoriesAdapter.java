@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apsinnovations.livlyf.R;
 import com.apsinnovations.livlyf.models.Category;
+import com.apsinnovations.livlyf.utils.MyCategoryListener;
 
 import java.util.ArrayList;
 
@@ -20,11 +21,13 @@ public class HomeCategoriesAdapter extends RecyclerView.Adapter<HomeCategoriesAd
     Context context;
     int resource;
     ArrayList<Category> categories;
+    MyCategoryListener myCategoryListener;
 
     public HomeCategoriesAdapter(Context context, int resource) {
         this.context = context;
         this.resource = resource;
         this.categories = new ArrayList<>();
+        myCategoryListener = (MyCategoryListener) context;
         addCategories();
     }
 
@@ -65,6 +68,13 @@ public class HomeCategoriesAdapter extends RecyclerView.Adapter<HomeCategoriesAd
             cardView = itemView.findViewById(R.id.cardHomeCategory);
             imgCategory = itemView.findViewById(R.id.imgHomeCategory);
             txtCategory = itemView.findViewById(R.id.txtHomeCategory);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myCategoryListener.setCategory(categories.get(getLayoutPosition()).getName());
+                }
+            });
         }
     }
 }

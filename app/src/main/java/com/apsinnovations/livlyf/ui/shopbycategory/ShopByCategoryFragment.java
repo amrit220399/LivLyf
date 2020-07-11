@@ -17,15 +17,16 @@ public class ShopByCategoryFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
-
+    String name;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
         View view = inflater.inflate(R.layout.fragment_shop_by_category, container, false);
+        Bundle bundle = this.getArguments();
+
         tabLayout = view.findViewById(R.id.frag_tablayout);
         viewPager = view.findViewById(R.id.frag_viewPager);
-
         tabLayout.addTab(tabLayout.newTab().setText("Plants"));
         tabLayout.addTab(tabLayout.newTab().setText("Pots"));
         tabLayout.addTab(tabLayout.newTab().setText("Seeds"));
@@ -37,6 +38,11 @@ public class ShopByCategoryFragment extends Fragment {
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(myFragmentPagerAdapter);
+
+        if (bundle != null) {
+            name = bundle.getString("name");
+            goToTheTab(name);
+        }
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -57,5 +63,21 @@ public class ShopByCategoryFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void goToTheTab(String name) {
+        if (name.equals("Plants")) {
+            viewPager.setCurrentItem(0);
+        } else if (name.equals("Pots")) {
+            viewPager.setCurrentItem(1);
+        } else if (name.equals("Seeds")) {
+            viewPager.setCurrentItem(2);
+        } else if (name.equals("Pebbles")) {
+            viewPager.setCurrentItem(3);
+        } else if (name.equals("Tools")) {
+            viewPager.setCurrentItem(4);
+        } else if (name.equals("Decor")) {
+            viewPager.setCurrentItem(5);
+        }
     }
 }

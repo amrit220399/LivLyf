@@ -138,6 +138,10 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
         }
 
         private void updateTransaction() {
+            total = 0;
+            amt = 0;
+            ship = 0;
+            tax = 0;
             for (Products myProduct : products) {
                 amt += myProduct.getPrice() * myProduct.getQty();
                 ship += myProduct.getShipping();

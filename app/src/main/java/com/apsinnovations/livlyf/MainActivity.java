@@ -24,6 +24,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.apsinnovations.livlyf.models.User;
 import com.apsinnovations.livlyf.utils.MyCartListener;
+import com.apsinnovations.livlyf.utils.MyCategoryListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
@@ -35,7 +36,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MyCartListener {
+public class MainActivity extends AppCompatActivity implements MyCartListener, MyCategoryListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     TextView txtName, txtEmail;
@@ -82,6 +83,11 @@ public class MainActivity extends AppCompatActivity implements MyCartListener {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        String order = getIntent().getStringExtra("order");
+        if (order != null && order.equals("success")) {
+            navController.navigate(R.id.action_nav_home_to_nav_orders);
+        }
     }
 
     private void fetchProfile() {
@@ -92,8 +98,9 @@ public class MainActivity extends AppCompatActivity implements MyCartListener {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
+                assert user != null;
                 txtName.setText(user.getName());
-                txtEmail.setText(user.getPassword());
+                txtEmail.setText(user.getEmail());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -198,6 +205,21 @@ public class MainActivity extends AppCompatActivity implements MyCartListener {
     @Override
     public void setItems(int itemsCount) {
         new MyAsyncTask().execute("");
+    }
+
+    @Override
+    public void setCategory(String name) {
+        Bundle bundle = new Bundle();
+        bundle.putString("name", name);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.navigate(R.id.action_nav_home_to_nav_shopByCategory, bundle);
+//        FragmentManager fm=getSupportFragmentManager();
+//        FragmentTransaction ft=fm.beginTransaction();
+//        ShopByCategoryFragment shopByCategoryFragment=new ShopByCategoryFragment();
+//        shopByCategoryFragment.setArguments(bundle);
+//        ft.replace(R.id.nav_host_fragment,shopByCategoryFragment)
+//                .addToBackStack(null).commit();
+
     }
 
     class MyAsyncTask extends AsyncTask {

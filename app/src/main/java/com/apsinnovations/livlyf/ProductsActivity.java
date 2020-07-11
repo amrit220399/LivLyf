@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,8 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
     RecyclerView recyclerView;
     ProductsAdapter productsAdapter;
     ArrayList<Products> products;
+    TextView txtNoProducts;
+    ProgressBar progressBar;
     int items;
     Menu menu;
 //    boolean isFirstTymResume=true;
@@ -43,6 +46,8 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         setContentView(R.layout.activity_products);
         getSupportActionBar().setElevation(0);
         recyclerView = findViewById(R.id.recyclerProducts);
+        txtNoProducts = findViewById(R.id.txtNoProducts);
+        progressBar = findViewById(R.id.PA_progress);
         products = new ArrayList<>();
         setAdapter();
 //        new MyAsyncTask().execute("");
@@ -60,17 +65,22 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
+                if (queryDocumentSnapshots.getDocuments().size() == 0) {
+                    progressBar.setVisibility(View.GONE);
+                    txtNoProducts.setVisibility(View.VISIBLE);
+                    return;
+                }
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
 //                    Products myproduct=snapshot.toObject(Products.class);
                     products.add(snapshot.toObject(Products.class));
                 }
-              setAdapter();
+                setAdapter();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.e(TAG, "onFailure: " + e.getMessage());
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -117,6 +127,8 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(productsAdapter);
+        progressBar.setVisibility(View.GONE);
+        txtNoProducts.setVisibility(View.GONE);
     }
 
     @Override

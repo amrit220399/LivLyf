@@ -31,7 +31,7 @@ import java.util.Random;
 
 public class AddressActivity extends AppCompatActivity {
     private static final String TAG = "AddressActivity";
-    TextInputEditText txtName, txtAdd1, txtAdd2, txtLandMark, txtMobile;
+    TextInputEditText txtName, txtAdd1, txtAdd2, txtLandMark, txtMobile, txtPinCode;
     Button btnPay;
     Order order;
     Address address;
@@ -50,6 +50,7 @@ public class AddressActivity extends AppCompatActivity {
         txtAdd2 = findViewById(R.id.AA_Address2);
         txtLandMark = findViewById(R.id.AA_Landmark);
         txtMobile = findViewById(R.id.AA_mobile);
+        txtPinCode = findViewById(R.id.AA_PinCode);
         btnPay = findViewById(R.id.AA_btnPay);
         hashMap = new HashMap<>();
         Intent rcv = getIntent();
@@ -72,11 +73,12 @@ public class AddressActivity extends AppCompatActivity {
         String add1 = txtAdd1.getText().toString().trim();
         String add2 = txtAdd2.getText().toString().trim();
         String land = txtLandMark.getText().toString().trim();
+        String pinCode = txtPinCode.getText().toString().trim();
         String mobile = txtMobile.getText().toString().trim();
-        if (name.isEmpty() || add1.isEmpty() || add2.isEmpty() || land.isEmpty() || mobile.isEmpty() || mobile.length() < 10) {
+        if (name.isEmpty() || add1.isEmpty() || add2.isEmpty() || land.isEmpty() || pinCode.isEmpty() || mobile.isEmpty() || mobile.length() < 10) {
             Toast.makeText(this, "Invalid Details", Toast.LENGTH_SHORT).show();
         } else {
-            address = new Address(name, add1, add2, land, mobile);
+            address = new Address(name, add1, add2, land, pinCode, mobile);
             hashMap.put("order", order);
             hashMap.put("address", address);
             new MyAsyncTask().execute("");
@@ -130,6 +132,7 @@ public class AddressActivity extends AppCompatActivity {
                     snapshot.getReference().delete();
                 }
                 Intent intent = new Intent(AddressActivity.this, MainActivity.class);
+                intent.putExtra("order", "success");
                 startActivity(intent);
                 finishAffinity();
             }

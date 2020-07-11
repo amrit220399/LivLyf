@@ -3,17 +3,22 @@ package com.apsinnovations.livlyf.models;
 import java.io.Serializable;
 
 public class Address implements Serializable {
-    String name, addressLine1, addressLine2, landmark, mobile;
+    String name, addressLine1, addressLine2, landmark, pinCode, mobile;
 
     public Address() {
     }
 
-    public Address(String name, String addressLine1, String addressLine2, String landmark, String mobile) {
+    public Address(String name, String addressLine1, String addressLine2, String landmark, String pinCode, String mobile) {
         this.name = name;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.landmark = landmark;
+        this.pinCode = pinCode;
         this.mobile = mobile;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -23,12 +28,9 @@ public class Address implements Serializable {
                 ", addressLine1='" + addressLine1 + '\'' +
                 ", addressLine2='" + addressLine2 + '\'' +
                 ", landmark='" + landmark + '\'' +
+                ", pinCode='" + pinCode + '\'' +
                 ", mobile='" + mobile + '\'' +
                 '}';
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
@@ -65,5 +67,13 @@ public class Address implements Serializable {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
     }
 }
