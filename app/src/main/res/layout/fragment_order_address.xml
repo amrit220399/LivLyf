@@ -2,11 +2,14 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="20dp"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="8dp"
+    android:layout_marginEnd="5dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
     app:cardUseCompatPadding="true"
-    app:contentPadding="4dp">
+    app:contentPadding="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/name"
             android:textColor="@color/colorBlack"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -40,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="@string/mmm_dd_yyyy_hh_mm"
             android:textColor="@color/colorBlack"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -54,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="@string/_0"
             android:textColor="@color/colorBlack"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
 
         <TextView

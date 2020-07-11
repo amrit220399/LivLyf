@@ -1,6 +1,8 @@
 package com.apsinnovations.livlyf.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,11 +27,12 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderH
     Context context;
     int resource;
     ArrayList<OrderDetails> orderDetailsArrayList;
-
+    NavController navController;
     public MyOrderAdapter(Context context, int resource, ArrayList<OrderDetails> orderDetailsArrayList) {
         this.context = context;
         this.resource = resource;
         this.orderDetailsArrayList = orderDetailsArrayList;
+        navController = Navigation.findNavController((Activity) context, R.id.nav_host_fragment);
     }
 
     @NonNull
@@ -96,6 +101,15 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderH
             txtItemsCount = itemView.findViewById(R.id.txt_OrderItems);
             btnCancel = itemView.findViewById(R.id.btnCancelOrder);
             btnOrderAddress = itemView.findViewById(R.id.btnOrderAddress);
+
+            btnOrderAddress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("address", orderDetailsArrayList.get(getLayoutPosition()).getAddress());
+                    navController.navigate(R.id.action_nav_orders_to_orderAddressFragment, bundle);
+                }
+            });
         }
     }
 }
