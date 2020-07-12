@@ -16,7 +16,8 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/ic_menu_camera" />
+            android:tint="@color/colorWhite"
+            app:srcCompat="@drawable/ic_home" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,7 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Sample Text"
+            android:lineSpacingExtra="8sp"
+            android:text="@string/here_you_will_find_every_item_n_from_seeds_to_tress_n_from_tools_to_decor_n_from_pots_to_pebbles"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="18sp" />

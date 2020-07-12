@@ -16,23 +16,25 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/ic_menu_slideshow" />
+            android:tint="@color/colorWhite"
+            app:srcCompat="@drawable/livlogo" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@color/colorBlack"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@string/app_name"-->
+        <!--            android:textColor="@color/colorWhite"-->
+        <!--            android:textSize="22sp"-->
+        <!--            android:textStyle="bold" />-->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="This is an eCommerce Platform to Grow Plants"
+            android:lineSpacingExtra="8sp"
+            android:text="@string/this_is_an_ecommerce_app_n_for_getting_everything_you_need_n_for_your_garden"
             android:textAlignment="center"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorWhite"
             android:textSize="18sp" />
 
     </LinearLayout>

@@ -1,9 +1,11 @@
 package com.apsinnovations.livlyf.ui.orders;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +33,7 @@ public class OrdersFragment extends Fragment {
     RecyclerView recyclerOrders;
     TextView txtNoOrders;
     ArrayList<OrderDetails> orderDetailsArrayList;
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +43,7 @@ public class OrdersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_orders, container, false);
         recyclerOrders = view.findViewById(R.id.recyclerOrders);
         txtNoOrders = view.findViewById(R.id.txtNoOrders);
+        progressBar = view.findViewById(R.id.OF_progress);
         orderDetailsArrayList = new ArrayList<>();
         fetchOrders();
         return view;
@@ -54,6 +58,10 @@ public class OrdersFragment extends Fragment {
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (queryDocumentSnapshots.getDocuments().size() == 0) {
+                    progressBar.setVisibility(View.GONE);
+                    txtNoOrders.setVisibility(View.VISIBLE);
+                }
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
                     orderDetailsArrayList.add(snapshot.toObject(OrderDetails.class));
                 }
@@ -62,7 +70,8 @@ public class OrdersFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Log.i(TAG, "onFailure: " + e.getMessage());
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -71,5 +80,7 @@ public class OrdersFragment extends Fragment {
         MyOrderAdapter myOrderAdapter = new MyOrderAdapter(getContext(), R.layout.card_orders, orderDetailsArrayList);
         recyclerOrders.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerOrders.setAdapter(myOrderAdapter);
+        progressBar.setVisibility(View.GONE);
+        txtNoOrders.setVisibility(View.GONE);
     }
 }

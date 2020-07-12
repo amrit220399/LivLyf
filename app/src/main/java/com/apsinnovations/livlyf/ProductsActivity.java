@@ -49,7 +49,7 @@ public class ProductsActivity extends AppCompatActivity implements MyCartListene
         txtNoProducts = findViewById(R.id.txtNoProducts);
         progressBar = findViewById(R.id.PA_progress);
         products = new ArrayList<>();
-        setAdapter();
+//        setAdapter();
 //        new MyAsyncTask().execute("");
 //        fetchProducts();
     }
