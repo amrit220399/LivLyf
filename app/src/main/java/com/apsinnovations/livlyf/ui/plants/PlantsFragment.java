@@ -46,7 +46,7 @@ public class PlantsFragment extends Fragment {
 
 
     private void setAdapter() {
-        categoriesAdapter = new CategoriesAdapter(getContext(), R.layout.card_plant_categories, Names, "plants");
+        categoriesAdapter = new CategoriesAdapter(getContext(), R.layout.card_categories_two, Names, "plants");
         recyclerPlants.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerPlants.setAdapter(categoriesAdapter);
         progressBar.setVisibility(View.GONE);

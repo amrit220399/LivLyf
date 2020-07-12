@@ -125,7 +125,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyCartHold
             db.collection("users")
                     .document(uid)
                     .collection("myCart")
-                    .document(products.get(getLayoutPosition()).getID())
+                    .document(products.get(getLayoutPosition()).getId())
                     .delete()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

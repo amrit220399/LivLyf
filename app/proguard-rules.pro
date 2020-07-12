@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.apsinnovations.livlyf.models.Address {*;}
+-keep class com.apsinnovations.livlyf.models.OrderDetails {*;}
+-keep class com.apsinnovations.livlyf.models.Order {*;}
+-keep class com.apsinnovations.livlyf.models.Products {*;}
+-keep class com.apsinnovations.livlyf.models.User {*;}
+-keep class com.apsinnovations.livlyf.models.Category {*;}
+-keep class com.apsinnovations.livlyf.models.SliderItem {*;}

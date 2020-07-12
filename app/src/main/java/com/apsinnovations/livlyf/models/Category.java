@@ -1,9 +1,9 @@
 package com.apsinnovations.livlyf.models;
 
 public class Category {
-    int drawable;
-    String name;
-    int color;
+    private int drawable;
+    private String name;
+    private int color;
 
     public Category(int drawable, String name, int color) {
         this.drawable = drawable;

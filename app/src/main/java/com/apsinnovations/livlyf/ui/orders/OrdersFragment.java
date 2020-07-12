@@ -61,6 +61,7 @@ public class OrdersFragment extends Fragment {
                 if (queryDocumentSnapshots.getDocuments().size() == 0) {
                     progressBar.setVisibility(View.GONE);
                     txtNoOrders.setVisibility(View.VISIBLE);
+                    return;
                 }
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
                     orderDetailsArrayList.add(snapshot.toObject(OrderDetails.class));
@@ -71,6 +72,7 @@ public class OrdersFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: " + e.getMessage());
+                txtNoOrders.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
         });

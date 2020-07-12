@@ -1,9 +1,10 @@
 package com.apsinnovations.livlyf;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,10 +21,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
-import com.apsinnovations.livlyf.models.Products;
 import com.apsinnovations.livlyf.models.User;
 import com.apsinnovations.livlyf.utils.PrefManager;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -32,7 +34,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -40,6 +41,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Objects;
 
 
@@ -57,6 +59,7 @@ public class SignupActivity extends AppCompatActivity {
     boolean DPflag=false;
     User user;
     FirebaseUser firebaseUser;
+    Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +161,6 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void saveUserInFirebase() {
-        Products order=new Products();
         FirebaseFirestore db=FirebaseFirestore.getInstance();
         db.collection("users")
                 .document(firebaseUser.getUid())
@@ -167,8 +169,8 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         if(DPflag) {
-                            BitmapDrawable bitmapDrawable= (BitmapDrawable) imgDP.getDrawable();
-                            Bitmap bitmap=bitmapDrawable.getBitmap();
+//                            BitmapDrawable bitmapDrawable= (BitmapDrawable) imgDP.getDrawable();
+//                            Bitmap bitmap=bitmapDrawable.getBitmap();
                             UploadtoStorage(bitmap);
                         }else{
                             Intent intent=new Intent(getApplicationContext(),MainActivity.class);
@@ -183,20 +185,6 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        db.collection("users")
-                .document(firebaseUser.getUid())
-                .collection("orders")
-                .add(order).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.i(TAG, "onSuccess: Order Created");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: Order Failed");
-            }
-        });
     }
 
     private void showPictureDialog() {
@@ -224,9 +212,14 @@ public class SignupActivity extends AppCompatActivity {
 
     private void ClickfromCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, TAKE_IMAGE_CODE);
+        if (ActivityCompat.checkSelfPermission(SignupActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SignupActivity.this, new String[]{Manifest.permission.CAMERA}, 111);
+        } else {
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, TAKE_IMAGE_CODE);
+            }
         }
+
     }
 
     private void SelectfromGallery() {
@@ -241,9 +234,14 @@ public class SignupActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TAKE_IMAGE_CODE) {
             if (resultCode == RESULT_OK && data!=null && data.getExtras()!=null) {
-                    Uri filePath = data.getData();
-                    Picasso.get().load(filePath).fit().centerInside().into(imgDP);
-                    DPflag=true;
+//                    Uri filePath = data.getData();
+                Bundle bundle = data.getExtras();
+                bitmap = (Bitmap) bundle.get("data");
+//                Glide.with(this).load(bitmap).fitCenter().into(imgDP);
+//                    Picasso.get().load(bitmap).fit().centerInside().into(imgDP);
+//                UploadtoStorage(bitmap);
+                imgDP.setImageBitmap(bitmap);
+                DPflag = true;
             }else{
                 Toast.makeText(getApplicationContext(),"Please Try Again..",Toast.LENGTH_SHORT).show();
             }
@@ -255,14 +253,28 @@ public class SignupActivity extends AppCompatActivity {
 
             // Get the Uri of data
             Uri filePath = data.getData();
+            try {
+
+                bitmap = MediaStore
+                        .Images
+                        .Media
+                        .getBitmap(
+                                getContentResolver(),
+                                filePath);
+                Glide.with(this).load(bitmap).fitCenter().into(imgDP);
+//                UploadtoStorage(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Picasso.get().load(filePath).fit().centerInside().into(imgDP);
-            DPflag=true;
+            DPflag = true;
         }
     }
 
     private void UploadtoStorage(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         final StorageReference saveRef = storageReference.child("usersDP").child(firebaseUser.getUid() + ".jpeg");
 
         saveRef.putBytes(baos.toByteArray())
@@ -304,7 +316,6 @@ public class SignupActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-//                        Toast.makeText(SignupActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(intent);
                         finish();
@@ -317,5 +328,19 @@ public class SignupActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                     }
                 });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 111 && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, TAKE_IMAGE_CODE);
+                }
+            } else {
+                Toast.makeText(SignupActivity.this, "Please allow Camera Access!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

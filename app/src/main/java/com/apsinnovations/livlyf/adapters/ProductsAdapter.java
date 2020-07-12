@@ -72,8 +72,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
         holder.quantityPicker.setMinQuantity(1);
 
         for (Products myProduct : addedProducts) {
-            if (myProduct.getID() != null) {
-                if (myProduct.getID().equals(products.get(position).getID())) {
+            if (myProduct.getId() != null) {
+                if (myProduct.getId().equals(products.get(position).getId())) {
                     holder.addToCart.setText(R.string.added);
                     holder.addToCart.setClickable(false);
                 }
@@ -81,8 +81,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
         }
 
         for (Products myProduct : wishListProducts) {
-            if (myProduct.getID() != null) {
-                if (myProduct.getID().equals(products.get(position).getID())) {
+            if (myProduct.getId() != null) {
+                if (myProduct.getId().equals(products.get(position).getId())) {
                     holder.imgFav.setImageResource(R.drawable.ic_heart_fill);
                     holder.imgFav.setClickable(false);
                 }
@@ -106,8 +106,33 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
                     Products myProduct = snapshot.toObject(Products.class);
                     assert myProduct != null;
-                    myProduct.setID(snapshot.getId());
+                    myProduct.setId(snapshot.getId());
                     wishListProducts.add(myProduct);
+                    Log.i(TAG, "onSuccess: " + snapshot.toObject(Products.class));
+                }
+                notifyDataSetChanged();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: " + e.getMessage());
+            }
+        });
+    }
+
+    private void getMyCartFromFirebase() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                .collection("myCart")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
+                    Products myProduct = snapshot.toObject(Products.class);
+                    assert myProduct != null;
+                    myProduct.setId(snapshot.getId());
+                    addedProducts.add(myProduct);
                     Log.i(TAG, "onSuccess: " + snapshot.toObject(Products.class));
                 }
                 notifyDataSetChanged();
@@ -171,7 +196,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
             db.collection("users")
                     .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                     .collection("myWishList")
-                    .document(myProduct.getID())
+                    .document(myProduct.getId())
                     .set(myProduct)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -193,7 +218,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
             db.collection("users")
                     .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                     .collection("myCart")
-                    .document(myProduct.getID())
+                    .document(myProduct.getId())
                     .set(myProduct)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -208,31 +233,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyProd
                 }
             });
         }
-    }
-
-    private void getMyCartFromFirebase(){
-        FirebaseFirestore db=FirebaseFirestore.getInstance();
-        db.collection("users")
-                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                .collection("myCart")
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(DocumentSnapshot snapshot:queryDocumentSnapshots.getDocuments()){
-                    Products myProduct=snapshot.toObject(Products.class);
-                    assert myProduct != null;
-                    myProduct.setID(snapshot.getId());
-                    addedProducts.add(myProduct);
-                    Log.i(TAG, "onSuccess: "+snapshot.toObject(Products.class));
-                }
-                notifyDataSetChanged();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: "+e.getMessage());
-            }
-        });
     }
 
 }

@@ -57,7 +57,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
                     Products myProduct = snapshot.toObject(Products.class);
                     assert myProduct != null;
-                    myProduct.setID(snapshot.getId());
+                    myProduct.setId(snapshot.getId());
                     addedProducts.add(myProduct);
                     Log.i(TAG, "onSuccess: " + snapshot.toObject(Products.class));
                 }
@@ -89,8 +89,8 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
         holder.quantityPicker.setMinQuantity(1);
 
         for (Products myProduct : addedProducts) {
-            if (myProduct.getID() != null) {
-                if (myProduct.getID().equals(products.get(position).getID())) {
+            if (myProduct.getId() != null) {
+                if (myProduct.getId().equals(products.get(position).getId())) {
                     holder.btnAddToCart.setText(R.string.added);
                     holder.btnAddToCart.setClickable(false);
                 }
@@ -151,7 +151,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
             db.collection("users")
                     .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                     .collection("myCart")
-                    .document(myProduct.getID())
+                    .document(myProduct.getId())
                     .set(myProduct)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -172,7 +172,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
             db.collection("users")
                     .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .collection("myWishList")
-                    .document(products.get(getLayoutPosition()).getID())
+                    .document(products.get(getLayoutPosition()).getId())
                     .delete()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

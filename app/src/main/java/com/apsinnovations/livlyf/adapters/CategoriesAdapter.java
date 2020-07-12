@@ -37,7 +37,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (colName.equals("plants") || colName.equals("tools")) {
+        if (colName.equals("tools")) {
             return TYPE_ONE;
         } else {
             return TYPE_TWO;

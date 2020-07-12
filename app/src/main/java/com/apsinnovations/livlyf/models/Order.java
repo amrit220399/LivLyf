@@ -6,11 +6,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Order implements Serializable {
-    String orderID;
-    Timestamp timestamp;
-    ArrayList<Products> items;
-    double orderValue;
-    int status;
+    private String orderID;
+    private Timestamp timestamp;
+    private ArrayList<Products> items;
+    private double orderValue;
+    private int status;
 
     public Order() {
     }

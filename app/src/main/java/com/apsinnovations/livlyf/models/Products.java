@@ -3,13 +3,9 @@ package com.apsinnovations.livlyf.models;
 import java.io.Serializable;
 
 public class Products implements Serializable {
-    int price, mrp, qty, shipping, discount;
-    String ID, name, category, url;
+    private int price, mrp, qty, shipping, discount;
+    private String id, name, category, url;
 
-
-    public void setID(String ID) {
-        this.ID = ID;
-    }
 
     public Products() {
 
@@ -34,8 +30,12 @@ public class Products implements Serializable {
         return mrp;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -69,7 +69,6 @@ public class Products implements Serializable {
     @Override
     public String toString() {
         return "Products{" +
-                "ID='" + ID + '\'' +
                 ", name='" + name + '\'' +
                 ", category='" + category + '\'' +
                 ", price=" + price +

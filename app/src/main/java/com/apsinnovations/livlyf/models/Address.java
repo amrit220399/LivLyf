@@ -3,7 +3,7 @@ package com.apsinnovations.livlyf.models;
 import java.io.Serializable;
 
 public class Address implements Serializable {
-    String name, addressLine1, addressLine2, landmark, pinCode, mobile;
+    private String name, addressLine1, addressLine2, landmark, pinCode, mobile;
 
     public Address() {
     }
