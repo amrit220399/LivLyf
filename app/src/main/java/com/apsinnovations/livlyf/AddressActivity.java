@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,7 @@ public class AddressActivity extends AppCompatActivity {
     HashMap<String, Object> hashMap;
     FirebaseFirestore db;
     String uid;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class AddressActivity extends AppCompatActivity {
         txtMobile = findViewById(R.id.AA_mobile);
         txtPinCode = findViewById(R.id.AA_PinCode);
         btnPay = findViewById(R.id.AA_btnPay);
+        progressBar = findViewById(R.id.progressAddress);
         hashMap = new HashMap<>();
         Intent rcv = getIntent();
         double orderVal = rcv.getDoubleExtra("orderVal", 0);
@@ -63,7 +66,9 @@ public class AddressActivity extends AppCompatActivity {
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 getAddressDetails();
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -100,6 +105,7 @@ public class AddressActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: " + e.getMessage());
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -116,6 +122,7 @@ public class AddressActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                progressBar.setVisibility(View.INVISIBLE);
                 Log.i(TAG, "onFailure: " + e.getMessage());
             }
         });
@@ -133,6 +140,7 @@ public class AddressActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(AddressActivity.this, MainActivity.class);
                 intent.putExtra("order", "success");
+                progressBar.setVisibility(View.INVISIBLE);
                 startActivity(intent);
                 finishAffinity();
             }
@@ -140,6 +148,7 @@ public class AddressActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: " + e.getMessage());
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

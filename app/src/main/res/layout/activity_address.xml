@@ -137,10 +137,18 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/btn_rounded"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="10dp"
                 android:text="Pay"
                 android:textColor="@color/colorWhite" />
 
+            <ProgressBar
+                android:id="@+id/progressAddress"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:indeterminateTint="@color/colorPrimary"
+                android:visibility="invisible" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </RelativeLayout>
