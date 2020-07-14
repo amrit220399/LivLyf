@@ -18,7 +18,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.apsinnovations.livlyf.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 
 public class SupportFragment extends Fragment {
@@ -95,7 +101,31 @@ public class SupportFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Thanks for the Response!", Toast.LENGTH_SHORT).show();
+                HashMap<String, String> hashMap = new HashMap<>();
+                String subject, feed;
+                subject = txtSubject.getText().toString().trim();
+                feed = etxtFeedback.getText().toString().trim();
+                if (subject.isEmpty() || feed.isEmpty()) {
+                    Toast.makeText(getActivity(), "Invalid Arguments", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    hashMap.put("subject", subject);
+                    hashMap.put("comments", feed);
+                }
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("feedback")
+                        .add(hashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(getActivity(), "Thanks for the Response!", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "Error Try Again!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         });
 

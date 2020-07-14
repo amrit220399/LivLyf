@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -102,6 +103,12 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderH
             btnCancel = itemView.findViewById(R.id.btnCancelOrder);
             btnOrderAddress = itemView.findViewById(R.id.btnOrderAddress);
 
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelBooking();
+                }
+            });
             btnOrderAddress.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -110,6 +117,10 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderH
                     navController.navigate(R.id.action_nav_orders_to_orderAddressFragment, bundle);
                 }
             });
+        }
+
+        private void cancelBooking() {
+            Toast.makeText(context, "Cancellation NOT Available right now!", Toast.LENGTH_SHORT).show();
         }
     }
 }
